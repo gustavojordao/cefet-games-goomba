@@ -5,7 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * A classe principal de uma aplicação LibGDX deve herdar de ApplicationAdapter,
@@ -22,9 +25,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Game extends ApplicationAdapter {
 
+    private Goomba goomba;
     private SpriteBatch batch;
     private Texture[] mapLevelsTextures;
-    
+        
     /**
      * No método create colocamos código de inicialização do jogo. Por exemplo,
      * carregamos texturas, sons e outros recursos. Aqui também instanciamos
@@ -36,8 +40,11 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         mapLevelsTextures = new Texture[2];
         mapLevelsTextures[0] = new Texture("map-level-1.png");
+        mapLevelsTextures[1] = new Texture("map-level-2.png");
 
-        
+        goomba = new Goomba(new Texture("goomba-spritesheet.png"));
+        goomba.setPosition(new Vector2(30, 10));
+
         // cor de fundo da tela: branco
         Gdx.gl.glClearColor(1, 1, 1, 1);        
     }
@@ -68,10 +75,11 @@ public class Game extends ApplicationAdapter {
         // que renderizamos
         update(Gdx.graphics.getDeltaTime());
         
-
         batch.begin();        
             // desenhos são realizados aqui
             batch.draw(mapLevelsTextures[0], 0, 0);
+            goomba.render(batch);
+            batch.draw(mapLevelsTextures[1], 0, 0);
 
         batch.end();
     }
@@ -90,6 +98,9 @@ public class Game extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+        
+        goomba.setAnimationTime(goomba.getAnimationTime() + delta);
+        goomba.update();
 
         // ...
     }
